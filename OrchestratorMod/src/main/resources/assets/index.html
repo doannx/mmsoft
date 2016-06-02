@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Whisky Collection</title>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="table"></div>
+<div class="container" role="main">
+    <div class="jumbotron">
+        <h1>My Whisky Collection</h1>
+
+        <p>Just an example of simple CRUD application developed using Vert.x and Vertx Web.</p>
+    </div>
+    <div class="page-header">
+        <h1>Test is so difficult</h1>
+        <table>
+        	<tr>
+        		<td colspan="2"><button class="btn btn-default" onclick="load()">Get all users (in JSON format)</button></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2"><button class="btn btn-default" onclick="addMessById()">Add new message</button></td>
+        	</tr>
+        	<tr>
+        		<td>User</td>
+        		<td><input type="text" id="txtId1"/></td>
+        	</tr>
+        	<tr>
+        		<td>Title</td>
+        		<td><input type="text" id="txtTitle"/></td>
+        	</tr>
+        	<tr>
+        		<td>Content</td>
+        		<td><input type="text" id="txtContent"/></td>
+        	</tr>
+        	<tr>
+        		<td colspan="2"><button class="btn btn-default" onclick="getMessById()">Get messages by id</button></td>
+        	</tr>
+        	<tr>
+        		<td>UserId</td>
+        		<td><input type="text" id="txtId2"/></td>
+        	</tr>
+        </table>
+    </div>
+</div>
+<script>
+    function addMessById() {
+    	var id=$("#txtId1").val();
+        //$.post("/users/"+ id +"/messages", JSON.stringify({messageTitle: title, messageContent: content}), function () {
+        //}, "json");
+        var jsonData = {};
+		jsonData.messageTitle = $("#txtTitle").val();
+		jsonData.messageContent = $("#txtContent").val();
+    	$.ajax({
+			type: "GET",
+			data: JSON.stringify(jsonData),
+			url: "/users/"+ id +"/messages",
+			cache: false,
+			contentType: 'application/json',
+			dataType: "json",
+			scriptCharset: 'utf-8',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
+			success: function(data) {
+				alert(data);
+			}
+		});
+
+    }
+    function getMessById(id) {
+    	var id=$("#txtId2").val();
+        $.ajax({
+            method: "GET",
+            url: "/users/"+ id +"/messages"
+        }).done(function () {
+        });
+    }
+    function load() {
+        $.getJSON("/users", function (json) {
+        	if(json) {
+        		alert(json);
+        	}
+        });
+    }
+    
+    $("#extendFlowBtn").click(function() {
+		// URL取得
+		var jsonData = {};
+		jsonData.expandedID = $("#extensionId").val();
+		$.ajax({
+			type : "POST",
+			data : JSON.stringify(jsonData),
+			url : "/CSNAVI/InstallationEquipmentDetail/URLAcquisition",
+			cache : false,
+			contentType : 'application/json',
+			dataType : "json",
+			scriptCharset : 'utf-8',
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
+			success : function(data) {
+				$("#extensionId").val(data);
+			}
+		});
+	});
+    
+    
+    
+    
+</script>
+</body>
+</html>
